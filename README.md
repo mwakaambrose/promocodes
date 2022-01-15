@@ -1,5 +1,10 @@
 ### PromoCodes Case Study
 xxxxx wants to give out promo codes worth x amount during events so people can get free rides to and from the event. The flaw with that is people can use the promo codes without going to the event.
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
 #### Test coordinates
 - Mulawa mall 0.4121508,32.6414086 (origin)
 - Kira Health Center 0.4004731,32.6413863 (event)
