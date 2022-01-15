@@ -6,4 +6,10 @@ xxxxx wants to give out promo codes worth x amount during events so people can g
 - Kira Roundabout 0.4010102,32.6394255 (destination)
 - Promo Code Radius 1km
 
+### Tests
+
+These are the current test cases for the promo code system.
+
+![alt text](tests.png)
+
 https://stackoverflow.com/questions/12439801/how-to-check-if-a-certain-coordinates-fall-to-another-coordinates-radius-using-p
