@@ -57,4 +57,9 @@ class PromoCodeRepository implements Repositories
     {
         return PromoCode::whereCode($code)->first();
     }
+
+    public function getActive()
+    {
+        return PromoCode::whereIsActive(true)->get();
+    }
 }

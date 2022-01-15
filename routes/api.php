@@ -27,7 +27,7 @@ Route::group(["prefix" => "/v1"], function () {
         Route::post("/promo-codes", [PromoCodeApiController::class, "store"]);
         Route::post('/promo-codes/redeem', [PromoCodeApiController::class, 'redeem']);
         Route::post("/events", [EventApiController::class, "store"]);
-        Route::put("/promo-codes/{promo_code}", [PromoCodeApiController::class, "update"]); // deactivate
+        Route::put("/promo-codes/{promo_code}", [PromoCodeApiController::class, "deactivate"]);
 
         // Route::get("/promo-codes/{promo_code}", [PromoCodeApiController::class, "show"]);
         // Route::post("/events/{event}", [EventApiController::class, "update"]);

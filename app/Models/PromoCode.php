@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,7 @@ class PromoCode extends Model
     public static function boot()
     {
         parent::boot();
-        parent::saving(function (PromoCode $model) {
+        parent::creating(function (PromoCode $model) {
             $model->code = $model->generateCode();
         });
     }
@@ -63,6 +64,13 @@ class PromoCode extends Model
         ];
     }
 
+    public static function deactivationRules(): array
+    {
+        return [
+            "activate" => "required",
+        ];
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -85,5 +93,16 @@ class PromoCode extends Model
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    /**
+     * Checks if this code has expired
+     * yet.
+     *
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        return $this->expires_at < Carbon::now();
     }
 }

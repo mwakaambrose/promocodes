@@ -15,11 +15,11 @@ class Latitude
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getLatitude(): string
+    public function getLatitude(): float
     {
-        return $this->latitude;
+        return (float) $this->latitude;
     }
 
     /**

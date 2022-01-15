@@ -6,7 +6,6 @@ use Exception;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\EventFormRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Events\EventRepository;
 

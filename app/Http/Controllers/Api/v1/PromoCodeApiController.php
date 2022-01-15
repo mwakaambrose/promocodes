@@ -42,8 +42,7 @@ class PromoCodeApiController extends ApiController
      */
     public function active(Request $request): JsonResponse
     {
-        $promo_codes = $this->promo_code_repository->all()
-            ->where('active', true);
+        $promo_codes = $this->promo_code_repository->getActive();
         return $this->success($promo_codes);
     }
 
@@ -86,10 +85,18 @@ class PromoCodeApiController extends ApiController
      * @param PromoCode $promo_code
      * @return JsonResponse
      */
-    public function update(Request $request, PromoCode $promo_code): JsonResponse
+    public function deactivate(Request $request, PromoCode $promo_code): JsonResponse
     {
+        $validation = Validator::make($request->all(), PromoCode::deactivationRules());
+
+        if ($validation->fails()){
+            return $this->failed(["errors" => $validation->errors()]);
+        }
+
         $updated = $this->promo_code_repository
-            ->update($promo_code->id, $request->all());
+            ->update($promo_code->id, [
+                "is_active" => $request->activate
+            ]);
 
         if (!$updated) {
             return $this->error("Failed to update the promo code");
@@ -129,8 +136,12 @@ class PromoCodeApiController extends ApiController
         $promo_code = $this->promo_code_repository
             ->findByCode($request->code);
 
-        if (!$promo_code->is_active) {
+        if (!$promo_code) {
             return $this->failed("Promo code is invalid");
+        }
+
+        if (!$promo_code->is_active || $promo_code->isExpired()) {
+            return $this->failed("Promo code is not active yet or has expired");
         }
 
         // 2- Promo code belongs to an event, check that the event is active
@@ -143,18 +154,28 @@ class PromoCodeApiController extends ApiController
             new Latitude($event->latitude),
             new Longitude($event->longitude)
         );
+
         // 3- Check that the destination coordinate is within the event's
         // - Get the distance between the event and the destination coordinates
         // - Check that the distance is less than the event's radius
-        // - if true, then the promo can be used for the even
-        // - if false, then the promo cannot be used for the event
+        // - if true, then the promo can be used for the event
+        // - if false, then the promo cannot be used for the event return error
+        $distance = $event_coordinate->distanceTo($rides_destination_coordinate, new DistanceInKilometers());
 
-        // radius using the events coordinates
-        // 4- Check that the promo code has not been redeemed before by the same user
-        // 5 Get that the rides amount
-        // 6- Apply the promo code discount to the rides amount
-        // 7- Create a new ride with the promo code discount applied and user that applied it
-        // 8- Create a response with distance and polyline
-        return $this->success($request->all());
+        if ($distance->getValue() > $promo_code->radius) {
+            return $this->failed("Promo code is invalid. The destination is outside the event's radius.");
+        }
+        // 4- Create a response with distance and polyline
+        $data = [
+            "distance" => $distance->getDistance(),
+            "polyline" => [
+                "points" => [
+                    (string)$rides_origin_coordinate,
+                    (string)$rides_destination_coordinate,
+                    (string)$event_coordinate,
+                ]
+            ]
+        ];
+        return $this->success($data);
     }
 }

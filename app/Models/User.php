@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @method static where(string $string, mixed $email)
+ * @method static first()
  */
 class User extends Authenticatable
 {

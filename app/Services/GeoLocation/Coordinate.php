@@ -56,6 +56,8 @@ class Coordinate
      * another coordinate
      *
      * @param Coordinate $coordinate
+     * @param Distance $in
+     *
      * @return Distance
      */
     public function distanceTo(Coordinate $coordinate, Distance $in): Distance
