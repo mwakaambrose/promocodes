@@ -167,11 +167,11 @@ class PromoCodeApiController extends ApiController
         }
         // 4- Create a response with distance and polyline
         $data = [
+            "promo_code" => $promo_code->getAttributes(),
             "polyline" => [
                 "points" => [
                     (string)$rides_origin_coordinate,
                     (string)$rides_destination_coordinate,
-                    (string)$event_coordinate,
                 ]
             ]
         ];

@@ -299,11 +299,11 @@ test("promo codes can be redeemed for an event", function () {
             "status" => ApiController::OK,
             "message" => "Success",
             "data" => [
+                "promo_code" => $promo_code->getAttributes(),
                 "polyline" => [
                     "points" => [
                         "0.4121508,32.6414086",
                         "0.4010102,32.6394255",
-                        "{$event->latitude},{$event->longitude}",
                     ]
                 ]
             ]
